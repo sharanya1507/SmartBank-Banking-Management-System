@@ -23,10 +23,10 @@ namespace SmartBank.API.Controllers
             return Ok(customers);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCustomerById(int id)
+        [HttpGet("{customerCode}")]
+        public async Task<IActionResult> GetCustomerById(Guid customerCode)
         {
-            var customer = await _customerRepo.GetCustomerByIdAsync(id);
+            var customer = await _customerRepo.GetCustomerByIdAsync(customerCode);
 
             if (customer == null)
                 return NotFound("Customer not found");
@@ -42,10 +42,10 @@ namespace SmartBank.API.Controllers
             return "Successfully Created the Customer";
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCustomer(int id,CustomerUpdateDto customerDto)
+        [HttpPut("{customerCode}")]
+        public async Task<IActionResult> UpdateCustomer(Guid customerCode,CustomerUpdateDto customerDto)
         {
-            var customer = await _customerRepo.UpdateCustomerAsync(id, customerDto);
+            var customer = await _customerRepo.UpdateCustomerAsync(customerCode, customerDto);
 
             if (customer == null)
                 return NotFound("Customer not found");
@@ -53,11 +53,10 @@ namespace SmartBank.API.Controllers
             return Ok(customer);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCustomer(int id)
+        [HttpDelete("{customerCode}")]
+        public async Task<IActionResult> DeleteCustomer(Guid customerCode)
         {
-            var result =
-                await _customerRepo.DeleteCustomerAsync(id);
+            var result = await _customerRepo.DeleteCustomerAsync(customerCode);
 
             if (!result)
                 return NotFound("Customer not found");
@@ -68,10 +67,9 @@ namespace SmartBank.API.Controllers
 
 
         [HttpGet("{id}/financial-summary")]
-        public async Task<IActionResult> GetFinancialSummary(int id)
+        public async Task<IActionResult> GetFinancialSummary(Guid customercode)
         {
-            var summary =
-                await _customerRepo.GetFinancialSummaryAsync(id);
+            var summary = await _customerRepo.GetFinancialSummaryAsync(customercode);
 
             if (summary == null)
                 return NotFound("Customer not found");

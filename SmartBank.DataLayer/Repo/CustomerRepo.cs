@@ -35,10 +35,10 @@ namespace SmartBank.DataLayer.Repo
                 .ToListAsync();
         }
 
-        public async Task<CustomerResponseDto?> GetCustomerByIdAsync(int id)
+        public async Task<CustomerResponseDto?> GetCustomerByIdAsync(Guid customerCode)
         {
             return await _context.Customers
-                .Where(c => c.CustomerId == id)
+                .Where(c => c.CustomerCode == customerCode)
                 .Select(c => new CustomerResponseDto
                 {
                     CustomerId = c.CustomerId,
@@ -81,10 +81,10 @@ namespace SmartBank.DataLayer.Repo
             return "Customer created successfully with ID: " + customer.CustomerId;
         }
 
-        public async Task<CustomerResponseDto?> UpdateCustomerAsync(int id,CustomerUpdateDto customerDto)
+        public async Task<CustomerResponseDto?> UpdateCustomerAsync(Guid customerCode,CustomerUpdateDto customerDto)
         {
             var customer = await _context.Customers
-                .FirstOrDefaultAsync(c => c.CustomerId == id);
+                .FirstOrDefaultAsync(c => c.CustomerCode == customerCode);
 
             if (customer == null)
                 return null;
@@ -115,10 +115,10 @@ namespace SmartBank.DataLayer.Repo
             };
         }
 
-        public async Task<bool> DeleteCustomerAsync(int id)
+        public async Task<bool> DeleteCustomerAsync(Guid customerCode)
         {
             var customer = await _context.Customers
-                .FirstOrDefaultAsync(c => c.CustomerId == id);
+                .FirstOrDefaultAsync(c => c.CustomerCode == customerCode);
 
             if (customer == null)
                 return false;
@@ -132,20 +132,20 @@ namespace SmartBank.DataLayer.Repo
 
 
 
-        public async Task<object?> GetFinancialSummaryAsync(int customerId)
+        public async Task<object?> GetFinancialSummaryAsync(Guid customerCode)
         {
-            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.CustomerId == customerId);
+            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.CustomerCode == customerCode);
 
             if (customer == null)
                 return null;
 
             var accountIds = await _context.Accounts
-                .Where(a => a.CustomerId == customerId)
+                .Where(a => a.CustomerId == customer.CustomerId)
                 .Select(a => a.AccountId)
                 .ToListAsync();
 
             var totalBalance = await _context.Accounts
-                .Where(a => a.CustomerId == customerId)
+                .Where(a => a.CustomerId == customer.CustomerId)
                 .SumAsync(a => a.CurrentBalance);
 
             var totalDeposits = await _context.BankTransactions
@@ -157,13 +157,13 @@ namespace SmartBank.DataLayer.Repo
                 .SumAsync(t => t.Amount);
 
             var totalLoanAmount = await _context.Loans
-                .Where(l => l.CustomerId == customerId)
+                .Where(l => l.CustomerId == customer.CustomerId)
                 .SumAsync(l => l.PrincipalAmount);
 
             var totalAccounts = accountIds.Count;
 
             var totalLoans = await _context.Loans
-                .CountAsync(l => l.CustomerId == customerId);
+                .CountAsync(l => l.CustomerId == customer.CustomerId);
 
             return new
             {
@@ -178,8 +178,7 @@ namespace SmartBank.DataLayer.Repo
 
                 TotalWithdrawals = totalWithdrawals,
 
-                NetSavings =
-                    totalDeposits - totalWithdrawals,
+                NetSavings = totalDeposits - totalWithdrawals,
 
                 TotalLoans = totalLoans,
 

@@ -28,6 +28,7 @@ public partial class BankTransaction
     public virtual Account Account { get; set; } = null!;
 }
 
+
 public class BankTransactionConfiguration : IEntityTypeConfiguration<BankTransaction>
 {
     public void Configure(EntityTypeBuilder<BankTransaction> builder)

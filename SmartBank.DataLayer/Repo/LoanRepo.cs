@@ -23,7 +23,7 @@ namespace SmartBank.DataLayer.Repo
              
             decimal emi;
 
-            if (monthlyRate == 0)
+            if (monthlyRate == 0) 
             {
                 emi = loanDto.PrincipalAmount / months;
             }

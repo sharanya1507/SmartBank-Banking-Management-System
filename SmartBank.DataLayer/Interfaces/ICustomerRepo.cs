@@ -9,16 +9,16 @@ namespace SmartBank.DataLayer.Interfaces
     {
         Task<List<CustomerResponseDto>> GetAllCustomersAsync();
 
-        Task<CustomerResponseDto?> GetCustomerByIdAsync(int id);
+        Task<CustomerResponseDto?> GetCustomerByIdAsync(Guid customerCode);
 
         Task<string> CreateCustomerAsync(CustomerCreateDto customerDto);
 
-        Task<CustomerResponseDto?> UpdateCustomerAsync(int id,CustomerUpdateDto customerDto);
+        Task<CustomerResponseDto?> UpdateCustomerAsync(Guid customerCode,CustomerUpdateDto customerDto);
 
-        Task<bool> DeleteCustomerAsync(int id);
+        Task<bool> DeleteCustomerAsync(Guid customerCode);
 
 
 
-        Task<object?> GetFinancialSummaryAsync(int customerId);
+        Task<object?> GetFinancialSummaryAsync(Guid customerCode);
     }
 }
