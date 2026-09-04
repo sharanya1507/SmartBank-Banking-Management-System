@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="SmartBank.API/SmartBank.API.csproj" />
+  <Project Path="SmartBank.DataLayer/SmartBank.DataLayer.csproj" />
+  <Project Path="SmartBank.Shared/SmartBank.Shared.csproj" />
+</Solution>
